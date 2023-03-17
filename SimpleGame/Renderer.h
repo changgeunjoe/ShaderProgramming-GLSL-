@@ -17,6 +17,7 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void Class0310();
 	void Class3010_Rendering();
+	void DrawParticle();
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
@@ -24,6 +25,10 @@ private:
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
+	void Class0317();
+	void CreateParticleVBO();
+	GLuint m_ParticleShader = -1;
+	
 	
 	bool m_Initialized = false;
 	

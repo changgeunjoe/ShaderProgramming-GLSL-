@@ -19,6 +19,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
+	m_ParticleShader = CompileShaders("./Shaders/Particle.vs", "./Shaders/Particle.fs");
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -234,4 +235,18 @@ void Renderer::Class3010_Rendering()
 	
 
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void Renderer::DrawParticle()
+{
+	GLuint program = m_ParticleShader;
+	glUseProgram(program);
+
+	int posLoc = glGetAttribLocation(program, "a_Position");
+	glEnableVertexAttribArray(posLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
 }
