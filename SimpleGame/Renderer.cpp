@@ -201,9 +201,9 @@ void Renderer::Class0310()
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	float vertices2[] = { 1,1,0,
+	float vertices2[] = { 1,0,0,
 						 0,1,0,
-						0,0,0 };
+						0,0,1 };
 	glGenBuffers(1, &m_ColorVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
@@ -245,6 +245,12 @@ void Renderer::DrawParticle()
 	int posLoc = glGetAttribLocation(program, "a_Position");
 	glEnableVertexAttribArray(posLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
+	glEnableVertexAttribArray(posLoc); // glvertexattribpoint ->첫번째 변수와 연동
+	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
