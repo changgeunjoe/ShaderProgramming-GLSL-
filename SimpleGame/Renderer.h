@@ -28,6 +28,9 @@ private:
 	void Class0317();
 	void CreateParticleVBO();
 	GLuint m_ParticleShader = -1;
+	GLuint m_ParticleVertex = -1;
+	GLuint m_ParticleVBO = -1;
+
 	
 	
 	bool m_Initialized = false;

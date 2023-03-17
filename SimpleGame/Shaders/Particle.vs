@@ -1,7 +1,7 @@
 #version 330
 
 layout(location = 0)in vec3 a_Position;
-layout(location = 1)in vec3 a_Color;
+layout(location = 1)in vec4 a_Color;
 out vec4 outColor;
 void main()
 {
@@ -10,8 +10,5 @@ void main()
 	newPosition.w=1;
 	gl_Position = newPosition;
 
-	vec4 newColor;
-	newColor.xyz=a_Color;
-	newColor.w=1;
-	outColor=newColor;
+	outColor=a_Color;
 }

@@ -23,6 +23,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
+	CreateParticleVBO();
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -192,21 +193,69 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 	*newY = y * 2.f / m_WindowSizeY;
 }
 
+void Renderer::CreateParticleVBO()
+{
+
+	int vertexCount = 6;
+	int particleCount = 1;
+	int floatCount = 3;
+	int totalFloatCount = particleCount
+		* vertexCount
+		* floatCount;
+	m_ParticleVertex = vertexCount * particleCount;
+	float* vertices = NULL;
+	vertices = new float[totalFloatCount];
+	float particleSize = 0.5f;
+	float particleCenterX = 0.f;
+	float particleCenterY = 0.f;
+	
+
+	int index = 0;
+	vertices[index] = particleCenterX - particleSize; index++;
+	vertices[index] = particleCenterY + particleSize; index++;
+	vertices[index] = 0.f; index++;
+	vertices[index] = particleCenterX - particleSize; index++;
+	vertices[index] = particleCenterY - particleSize; index++;
+	vertices[index] = 0.f; index++;
+	vertices[index] = particleCenterX + particleSize; index++;
+	vertices[index] = particleCenterY + particleSize; index++;
+	vertices[index] = 0.f; index++;
+
+	vertices[index] = particleCenterX + particleSize; index++;
+	vertices[index] = particleCenterY + particleSize; index++;
+	vertices[index] = 0.f; index++;
+	vertices[index] = particleCenterX - particleSize; index++;
+	vertices[index] = particleCenterY - particleSize; index++;
+	vertices[index] = 0.f; index++;
+	vertices[index] = particleCenterX + particleSize; index++;
+	vertices[index] = particleCenterY - particleSize; index++;
+	vertices[index] = 0.f; index++;
+
+	glGenBuffers(1, &m_ParticleVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCount, vertices, GL_STATIC_DRAW);
+
+
+}
+
 void Renderer::Class0310()
 {
 	float vertices[] = { 0,0,0,
 						 1,0,0,
+						1,1,0 ,
+						0,1,0,
+						0,0,0,
 						1,1,0 };
 	glGenBuffers(1, &m_testVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	float vertices2[] = { 1,0,0,
-						 0,1,0,
-						0,0,1 };
+	float color[] = { 1,0,0,1,
+						 0,1,0,1,
+						0,0,1,1};
 	glGenBuffers(1, &m_ColorVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
 
 }
 
@@ -244,15 +293,15 @@ void Renderer::DrawParticle()
 
 	int posLoc = glGetAttribLocation(program, "a_Position");
 	glEnableVertexAttribArray(posLoc);
-	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
-	posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
-	glEnableVertexAttribArray(posLoc); // glvertexattribpoint ->첫번째 변수와 연동
-	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
-	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
+	//glEnableVertexAttribArray(posLoc); // glvertexattribpoint ->첫번째 변수와 연동
+	//glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
+	//glVertexAttribPointer(posLoc, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVertex);
 
 }
