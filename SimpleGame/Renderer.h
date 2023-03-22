@@ -31,6 +31,7 @@ private:
 	GLuint m_ParticleShader = -1;
 	GLuint m_ParticleVertex = -1;
 	GLuint m_ParticleVBO = -1;
+	GLuint m_ParticlevelVBO = -1;
 
 	
 	

@@ -203,6 +203,7 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 		* vertexCount
 		* floatCount;
 	m_ParticleVertex = vertexCount * particleCount;
+	
 	float* vertices = NULL;
 	vertices = new float[totalFloatCount];
 	float particleSize = 0.01f;
@@ -240,7 +241,43 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCount, vertices, GL_STATIC_DRAW);
 
+	float* verticesVel = NULL;
+	verticesVel = new float[totalFloatCount];
+	
 
+	index = 0;
+
+	for (int i = 0; i < particleCount; i++)
+	{
+		float VelX = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		float VelY = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+		verticesVel[index++] = VelX;
+		verticesVel[index++] = VelY;
+		verticesVel[index++] = 0.f;
+	}
+
+	glGenBuffers(1, &m_ParticlevelVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlevelVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCount, verticesVel, GL_STATIC_DRAW);
+
+	delete vertices;
+	delete verticesVel;
 }
 
 void Renderer::Class0310()
@@ -300,6 +337,12 @@ void Renderer::DrawParticle()
 	glEnableVertexAttribArray(posLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	int velLoc = glGetAttribLocation(program, "a_Vel");
+	glEnableVertexAttribArray(velLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlevelVBO);
+	glVertexAttribPointer(velLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
 	//posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
