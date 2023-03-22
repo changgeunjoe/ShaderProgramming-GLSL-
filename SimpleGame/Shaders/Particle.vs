@@ -3,10 +3,14 @@
 layout(location = 0)in vec3 a_Position;
 layout(location = 1)in vec4 a_Color;
 out vec4 outColor;
+
+uniform float u_Time;
+
+const vec3 c_Vel=vec3(0.001,0.0,0.0);
 void main()
 {
 	vec4 newPosition;
-	newPosition.xyz = a_Position; 
+	newPosition.xyz = a_Position+c_Vel*u_Time; 
 	newPosition.w=1;
 	gl_Position = newPosition;
 

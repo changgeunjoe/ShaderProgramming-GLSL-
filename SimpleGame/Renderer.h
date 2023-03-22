@@ -18,6 +18,7 @@ public:
 	void Class0310();
 	void Class3010_Rendering();
 	void DrawParticle();
+	void Moveparticle();
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
@@ -26,7 +27,7 @@ private:
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
 	void Class0317();
-	void CreateParticleVBO();
+	void CreateParticleVBO(int nummParticleCount);
 	GLuint m_ParticleShader = -1;
 	GLuint m_ParticleVertex = -1;
 	GLuint m_ParticleVBO = -1;
@@ -43,6 +44,9 @@ private:
 
 	GLuint m_testVBO = 0;
 	GLuint m_ColorVBO = 0;
+
+	int particleCount = 0;
+	float g_time = 0;
 
 };
 

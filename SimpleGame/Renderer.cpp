@@ -23,7 +23,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
-	CreateParticleVBO();
+	CreateParticleVBO(1000);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -193,11 +193,11 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 	*newY = y * 2.f / m_WindowSizeY;
 }
 
-void Renderer::CreateParticleVBO()
+void Renderer::CreateParticleVBO(int nummParticleCount)
 {
 
 	int vertexCount = 6;
-	int particleCount = 1;
+	 particleCount = nummParticleCount;
 	int floatCount = 3;
 	int totalFloatCount = particleCount
 		* vertexCount
@@ -205,31 +205,36 @@ void Renderer::CreateParticleVBO()
 	m_ParticleVertex = vertexCount * particleCount;
 	float* vertices = NULL;
 	vertices = new float[totalFloatCount];
-	float particleSize = 0.5f;
-	float particleCenterX = 0.f;
-	float particleCenterY = 0.f;
+	float particleSize = 0.01f;
+
 	
 
 	int index = 0;
-	vertices[index] = particleCenterX - particleSize; index++;
-	vertices[index] = particleCenterY + particleSize; index++;
-	vertices[index] = 0.f; index++;
-	vertices[index] = particleCenterX - particleSize; index++;
-	vertices[index] = particleCenterY - particleSize; index++;
-	vertices[index] = 0.f; index++;
-	vertices[index] = particleCenterX + particleSize; index++;
-	vertices[index] = particleCenterY + particleSize; index++;
-	vertices[index] = 0.f; index++;
 
-	vertices[index] = particleCenterX + particleSize; index++;
-	vertices[index] = particleCenterY + particleSize; index++;
-	vertices[index] = 0.f; index++;
-	vertices[index] = particleCenterX - particleSize; index++;
-	vertices[index] = particleCenterY - particleSize; index++;
-	vertices[index] = 0.f; index++;
-	vertices[index] = particleCenterX + particleSize; index++;
-	vertices[index] = particleCenterY - particleSize; index++;
-	vertices[index] = 0.f; index++;
+	for (int i = 0; i < nummParticleCount; i++)
+	{
+		float particleCenterX = 2.0f*((float)rand() / (float)RAND_MAX - 0.5f);
+		float particleCenterY = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY + particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX - particleSize; 
+		vertices[index++] = particleCenterY - particleSize; 
+		vertices[index++] = 0.f; 
+		vertices[index++] = particleCenterX + particleSize; 
+		vertices[index++] = particleCenterY + particleSize; 
+		vertices[index++] = 0.f;
+
+		vertices[index++] = particleCenterX + particleSize; 
+		vertices[index++] = particleCenterY + particleSize; 
+		vertices[index++] = 0.f; 
+		vertices[index++] = particleCenterX - particleSize; 
+		vertices[index++] = particleCenterY - particleSize; 
+		vertices[index++] = 0.f; 
+		vertices[index++] = particleCenterX + particleSize; 
+		vertices[index++] = particleCenterY - particleSize; 
+		vertices[index++] = 0.f; 
+	}
 
 	glGenBuffers(1, &m_ParticleVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
@@ -302,6 +307,42 @@ void Renderer::DrawParticle()
 	//glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	//glVertexAttribPointer(posLoc, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
+	int timeLoc = glGetUniformLocation(program, "u_Time");
+	glUniform1f(timeLoc, g_time);
+	g_time += 0.016;
+	if (g_time > 100) {
+		g_time = 0;
+	}
+
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVertex);
+
+}
+
+void Renderer::Moveparticle()
+{
+	/*for (int i = 0; i < particleCount; i++)
+	{
+		float particleCenterX = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		float particleCenterY = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY + particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY + particleSize;
+		vertices[index++] = 0.f;
+
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY + particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
+	}*/
 
 }
