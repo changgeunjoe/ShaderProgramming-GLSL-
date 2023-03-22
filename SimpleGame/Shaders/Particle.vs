@@ -7,12 +7,15 @@ layout(location = 2)in vec4 a_Color;
 out vec4 outColor;
 
 uniform float u_Time;
+uniform vec3 u_Accel;
 
 
 void main()
 {
 	vec4 newPosition;
-	newPosition.xyz = a_Position+a_Vel*u_Time; 
+	newPosition.xyz = a_Position
+		+a_Vel*u_Time
+		+0.5 * u_Accel*u_Time*u_Time; 
 	newPosition.w=1;
 	gl_Position = newPosition;
 

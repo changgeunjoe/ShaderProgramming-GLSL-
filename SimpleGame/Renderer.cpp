@@ -352,6 +352,9 @@ void Renderer::DrawParticle()
 
 	int timeLoc = glGetUniformLocation(program, "u_Time");
 	glUniform1f(timeLoc, g_time);
+
+	int accelLoc = glGetUniformLocation(program, "u_Accel");
+	glUniform3f(accelLoc, 0.f,-1.3f,0.f);
 	g_time += 0.016;
 	if (g_time > 100) {
 		g_time = 0;
