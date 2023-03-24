@@ -33,6 +33,10 @@ private:
 	GLuint m_ParticleVBO = -1;
 	GLuint m_ParticlevelVBO = -1;
 
+	GLuint m_EmitTimeVBO = -1;
+	GLuint m_LifeTimeVBO = -1;
+	//GLuint m_EmitTimeVBO = -1;
+
 	
 	
 	bool m_Initialized = false;

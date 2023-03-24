@@ -20,10 +20,10 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_ParticleShader = CompileShaders("./Shaders/Particle.vs", "./Shaders/Particle.fs");
-	
+
 	//Create VBOs
 	CreateVertexBufferObjects();
-	CreateParticleVBO(1000);
+	CreateParticleVBO(1);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -31,7 +31,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	}
 
 	Class0310();
-	
+
 }
 
 bool Renderer::IsInitialized()
@@ -88,7 +88,7 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	glAttachShader(ShaderProgram, ShaderObj);
 }
 
-bool Renderer::ReadFile(char* filename, std::string *target)
+bool Renderer::ReadFile(char* filename, std::string* target)
 {
 	std::ifstream file(filename);
 	if (file.fail())
@@ -187,7 +187,7 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
+void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 {
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
@@ -197,44 +197,48 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 {
 
 	int vertexCount = 6;
-	 particleCount = nummParticleCount;
+	particleCount = nummParticleCount;
 	int floatCount = 3;
 	int totalFloatCount = particleCount
 		* vertexCount
 		* floatCount;
+
+	int totalFloatCountSingle = particleCount
+		* vertexCount
+		* 1;
 	m_ParticleVertex = vertexCount * particleCount;
-	
+
 	float* vertices = NULL;
 	vertices = new float[totalFloatCount];
 	float particleSize = 0.01f;
 
-	
+
 
 	int index = 0;
 
 	for (int i = 0; i < nummParticleCount; i++)
 	{
-		float particleCenterX = 2.0f*((float)rand() / (float)RAND_MAX - 0.5f);
-		float particleCenterY = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		float particleCenterX = 0.0f;
+			float particleCenterY = 0.0f;
 		vertices[index++] = particleCenterX - particleSize;
 		vertices[index++] = particleCenterY + particleSize;
 		vertices[index++] = 0.f;
-		vertices[index++] = particleCenterX - particleSize; 
-		vertices[index++] = particleCenterY - particleSize; 
-		vertices[index++] = 0.f; 
-		vertices[index++] = particleCenterX + particleSize; 
-		vertices[index++] = particleCenterY + particleSize; 
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY + particleSize;
 		vertices[index++] = 0.f;
 
-		vertices[index++] = particleCenterX + particleSize; 
-		vertices[index++] = particleCenterY + particleSize; 
-		vertices[index++] = 0.f; 
-		vertices[index++] = particleCenterX - particleSize; 
-		vertices[index++] = particleCenterY - particleSize; 
-		vertices[index++] = 0.f; 
-		vertices[index++] = particleCenterX + particleSize; 
-		vertices[index++] = particleCenterY - particleSize; 
-		vertices[index++] = 0.f; 
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY + particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX - particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
+		vertices[index++] = particleCenterX + particleSize;
+		vertices[index++] = particleCenterY - particleSize;
+		vertices[index++] = 0.f;
 	}
 
 	glGenBuffers(1, &m_ParticleVBO);
@@ -243,14 +247,14 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 
 	float* verticesVel = NULL;
 	verticesVel = new float[totalFloatCount];
-	
+
 
 	index = 0;
 
 	for (int i = 0; i < particleCount; i++)
 	{
-		float VelX = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
-		float VelY = 2.0f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		float VelX = 2.f * ((float)rand() / (float)RAND_MAX - 0.5f);
+		float VelY = 5.f * ((float)rand() / (float)RAND_MAX);
 		verticesVel[index++] = VelX;
 		verticesVel[index++] = VelY;
 		verticesVel[index++] = 0.f;
@@ -278,6 +282,54 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 
 	delete vertices;
 	delete verticesVel;
+
+	float* verticesTime = NULL;
+	verticesTime = new float[totalFloatCountSingle];
+
+
+	index = 0;
+
+	for (int i = 0; i < particleCount; i++)
+	{
+		float EmitTime = 10.0f * ((float)rand() / (float)RAND_MAX);
+		verticesTime[index++] = EmitTime;
+		verticesTime[index++] = EmitTime;
+		verticesTime[index++] = EmitTime;
+		verticesTime[index++] = EmitTime;
+		verticesTime[index++] = EmitTime;
+		verticesTime[index++] = EmitTime;
+	}
+
+	glGenBuffers(1, &m_EmitTimeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_EmitTimeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCountSingle, verticesTime, GL_STATIC_DRAW);
+
+	delete verticesTime;
+
+
+	float* verticesLifeTime = NULL;
+	verticesLifeTime = new float[totalFloatCountSingle];
+
+
+	index = 0;
+
+	for (int i = 0; i < particleCount; i++)
+	{
+		float LifeTime = 1.0f * ((float)rand() / (float)RAND_MAX);
+		verticesLifeTime[index++] = LifeTime;
+		verticesLifeTime[index++] = LifeTime;
+		verticesLifeTime[index++] = LifeTime;
+		verticesLifeTime[index++] = LifeTime;
+		verticesLifeTime[index++] = LifeTime;
+		verticesLifeTime[index++] = LifeTime;
+	}
+
+	glGenBuffers(1, &m_LifeTimeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_LifeTimeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCountSingle, verticesLifeTime, GL_STATIC_DRAW);
+
+	delete verticesLifeTime;
+
 }
 
 void Renderer::Class0310()
@@ -294,7 +346,7 @@ void Renderer::Class0310()
 
 	float color[] = { 1,0,0,1,
 						 0,1,0,1,
-						0,0,1,1};
+						0,0,1,1 };
 	glGenBuffers(1, &m_ColorVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
@@ -305,11 +357,11 @@ void Renderer::Class3010_Rendering()
 {
 	glUseProgram(m_SolidRectShader);
 
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0,0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1,1,1,1);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 1, 1, 1);
 
 	int attribLocation_Position = -1;
-	attribLocation_Position = glGetAttribLocation(m_SolidRectShader,"a_Position");
+	attribLocation_Position = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribLocation_Position); // glvertexattribpoint ->첫번째 변수와 연동
 	glBindBuffer(GL_ARRAY_BUFFER, m_testVBO);
 	glVertexAttribPointer(attribLocation_Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -322,8 +374,8 @@ void Renderer::Class3010_Rendering()
 	glEnableVertexAttribArray(attribLocation_Position); // glvertexattribpoint ->첫번째 변수와 연동
 	glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	glVertexAttribPointer(attribLocation_Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	
-	
+
+
 
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -345,6 +397,17 @@ void Renderer::DrawParticle()
 	glVertexAttribPointer(velLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
+	int velTime = glGetAttribLocation(program, "a_EmitTime");
+	glEnableVertexAttribArray(velTime);
+	glBindBuffer(GL_ARRAY_BUFFER, m_EmitTimeVBO);
+	glVertexAttribPointer(velTime, 1, GL_FLOAT, GL_FALSE, 0, 0);
+
+	int LifeTime = glGetAttribLocation(program, "a_LifeTime");
+	glEnableVertexAttribArray(LifeTime);
+	glBindBuffer(GL_ARRAY_BUFFER, m_LifeTimeVBO);
+	glVertexAttribPointer(LifeTime, 1, GL_FLOAT, GL_FALSE, 0, 0);
+
+
 	//posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
 	//glEnableVertexAttribArray(posLoc); // glvertexattribpoint ->첫번째 변수와 연동
 	//glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
@@ -354,11 +417,8 @@ void Renderer::DrawParticle()
 	glUniform1f(timeLoc, g_time);
 
 	int accelLoc = glGetUniformLocation(program, "u_Accel");
-	glUniform3f(accelLoc, 0.f,-1.3f,0.f);
-	g_time += 0.016;
-	if (g_time > 100) {
-		g_time = 0;
-	}
+	glUniform3f(accelLoc, 0.f, -1.3f, 0.f);
+	g_time += 0.001;
 
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVertex);
 
