@@ -9,7 +9,10 @@ layout(location = 4)in float a_LifeTime;
 layout(location = 5)in float a_PeriodTime;
 layout(location = 6)in float a_AmpTime;
 layout(location = 7)in float a_ValueTime;
+layout(location = 8)in vec4 a_RandomColor;
+
 out vec4 outColor;
+out vec4 v_Color;
 
 uniform float u_Time;
 uniform vec3 u_Accel;
@@ -81,6 +84,7 @@ vec4 p1()
 void main()
 {
 	gl_Position =GraphSin();
+	v_Color =a_RandomColor;
 }
 
 

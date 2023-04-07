@@ -35,6 +35,8 @@ private:
 	GLuint m_ParticlePreriodVBO = -1;
 	GLuint m_ParticleValueVBO = -1;
 	GLuint m_ParticleAmpVBO = -1;
+	GLuint m_ParticleColorAmpVBO = -1;
+	GLuint m_ParticlePosColAmpVBO = -1;
 	GLuint m_EmitTimeVBO = -1;
 	GLuint m_LifeTimeVBO = -1;
 	//GLuint m_EmitTimeVBO = -1;

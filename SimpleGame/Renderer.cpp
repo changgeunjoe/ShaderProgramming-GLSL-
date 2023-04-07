@@ -206,6 +206,10 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 	int totalFloatCountSingle = particleCount
 		* vertexCount
 		* 1;
+
+	int totalFloatCountFour = particleCount
+		* vertexCount
+		* 4;
 	m_ParticleVertex = vertexCount * particleCount;
 
 	float* vertices = NULL;
@@ -399,6 +403,133 @@ void Renderer::CreateParticleVBO(int nummParticleCount)
 
 	delete verticesValueTime;
 
+	float* verticesColor = NULL;
+	verticesColor = new float[totalFloatCountFour];
+
+
+	index = 0;
+
+	for (int i = 0; i < particleCount; i++)
+	{
+		float r = 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float g= 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float b= 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float a= 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v1
+
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v2
+
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v3
+
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v4
+
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v5
+
+		verticesColor[index++] = r;
+		verticesColor[index++] = g;
+		verticesColor[index++] = b;
+		verticesColor[index++] = a;//v6
+		
+	}
+
+	glGenBuffers(1, &m_ParticleColorAmpVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleColorAmpVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCountFour, verticesColor, GL_STATIC_DRAW);
+
+	delete verticesColor;
+
+	//pos +color vbo
+
+
+
+	int totalFloatCountPosCol = nummParticleCount * 6 * (3 + 4);
+	float* verticesPosColor = NULL;
+	verticesPosColor = new float[totalFloatCountPosCol];
+
+	index = 0;
+
+	for (int i = 0; i < nummParticleCount; i++)
+	{
+		float particleCenterX = 0.0f;
+		float particleCenterY = 0.0f;
+		float r = 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float g = 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float b = 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+		float a = 1.f * (2.0f * ((float)rand() / (float)RAND_MAX) - 1.0f);
+
+
+		verticesPosColor[index++] = particleCenterX - particleSize;
+		verticesPosColor[index++] = particleCenterY + particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v1
+
+		verticesPosColor[index++] = particleCenterX - particleSize;
+		verticesPosColor[index++] = particleCenterY - particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v2
+
+		verticesPosColor[index++] = particleCenterX + particleSize;
+		verticesPosColor[index++] = particleCenterY + particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v3
+
+		verticesPosColor[index++] = particleCenterX + particleSize;
+		verticesPosColor[index++] = particleCenterY + particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v4
+
+		verticesPosColor[index++] = particleCenterX - particleSize;
+		verticesPosColor[index++] = particleCenterY - particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v5
+
+		verticesPosColor[index++] = particleCenterX + particleSize;
+		verticesPosColor[index++] = particleCenterY - particleSize;
+		verticesPosColor[index++] = 0.f;
+		verticesPosColor[index++] = r;
+		verticesPosColor[index++] = g;
+		verticesPosColor[index++] = b;
+		verticesPosColor[index++] = a;//v6
+	}
+
+	glGenBuffers(1, &m_ParticlePosColAmpVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePosColAmpVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * totalFloatCountPosCol, verticesPosColor, GL_STATIC_DRAW);
+
+	delete verticesPosColor;
+
+
+
 }
 
 void Renderer::Class0310()
@@ -454,10 +585,16 @@ void Renderer::DrawParticle()
 	GLuint program = m_ParticleShader;
 	glUseProgram(program);
 
-	int posLoc = glGetAttribLocation(program, "a_Position");
-	glEnableVertexAttribArray(posLoc);
-	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
-	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//int posLoc = glGetAttribLocation(program, "a_Position");
+	//glEnableVertexAttribArray(posLoc);
+	//glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
+	//glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+
+	//int ColLoc = glGetAttribLocation(program, "a_RandomColor");
+	//glEnableVertexAttribArray(ColLoc);
+	//glBindBuffer(GL_ARRAY_BUFFER, m_ParticleColorAmpVBO);
+	//glVertexAttribPointer(ColLoc, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 
 	int velLoc = glGetAttribLocation(program, "a_Vel");
@@ -491,12 +628,20 @@ void Renderer::DrawParticle()
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleValueVBO);
 	glVertexAttribPointer(ValueTime, 1, GL_FLOAT, GL_FALSE, 0, 0);
 
-
-
 	//posLoc = glGetAttribLocation(m_SolidRectShader, "a_Color");
 	//glEnableVertexAttribArray(posLoc); // glvertexattribpoint ->첫번째 변수와 연동
 	//glBindBuffer(GL_ARRAY_BUFFER, m_ColorVBO);
 	//glVertexAttribPointer(posLoc, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+	int posLoc = glGetAttribLocation(program, "a_Position");
+	glEnableVertexAttribArray(posLoc);
+	int ColLoc = glGetAttribLocation(program, "a_RandomColor");
+	glEnableVertexAttribArray(ColLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticlePosColAmpVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE,
+		sizeof(float) * 7, 0);
+	glVertexAttribPointer(ColLoc, 4, GL_FLOAT, GL_FALSE,
+		sizeof(float) * 7, (GLvoid*)(sizeof(float) * 3));
 
 	int timeLoc = glGetUniformLocation(program, "u_Time");
 	glUniform1f(timeLoc, g_time);
@@ -504,8 +649,14 @@ void Renderer::DrawParticle()
 	int accelLoc = glGetUniformLocation(program, "u_Accel");
 	glUniform3f(accelLoc, 0.f, -1.3f, 0.f);
 	g_time += 0.01;
+	
+
 
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleVertex);
+
+	
+	
+
 
 }
 
